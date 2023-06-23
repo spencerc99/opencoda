@@ -1,0 +1,22 @@
+{
+  "name": "opencoda",
+  "version": "1.0.0",
+  "description": "a resource to easily access data from a Coda table in a JSON format via API for publicly available documents without needing to set up an API key.",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "wrangler dev",
+    "deploy": "wrangler publish",
+    "add-env-variables": "wrangler secret put CODA_API_KEY"
+  },
+  "author": "Spencer Chang <spencerc99@gmail.com>",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "@cloudflare/workers-types": "^4.20230419.0",
+    "itty-router": "^3.0.12",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.0.0"
+  }
+}
