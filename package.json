@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "wrangler dev",
-    "deploy": "wrangler publish",
+    "deploy": "wrangler deploy",
     "add-env-variables": "wrangler secret put CODA_API_KEY"
   },
   "author": "Spencer Chang <spencerc99@gmail.com>",
