@@ -26,3 +26,7 @@ By default, data will be returned from the Coda API using the following paramete
 ```
 
 This is generally the best for simple data (text, images, numbers, lists of these things). If you would like to retain rich object information or rich text information (formatting for example), then you can override any of these parameters by appending them to the URL as query parameters.
+
+## Self-hosting
+
+You are welcome to fork this and self-host on Cloudflare Workers, which will also allow you to use your own Coda API token in order to access private docs and remove the need to make any table public.
