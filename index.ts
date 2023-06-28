@@ -27,12 +27,9 @@ const handler: ExportedHandler = {
     const url = new URL(request.url);
 
     if (url.pathname === "/") {
-      return new Response("", {
-        status: 302,
-        headers: {
-          location: "https://github.com/spencerc99/opencoda#readme",
-        },
-      });
+      return error(
+        "Please provide a doc ID and grid ID in the url path. See https://github.com/spencerc99/opencoda#readme for more info."
+      );
     }
 
     let [docId, gridId] = url.pathname
@@ -46,26 +43,33 @@ const handler: ExportedHandler = {
       return error("Invalid grid ID. Should be in the format of 'grid-123abc'");
     }
 
-    const resp = await fetch(
-      withQueryParams(
-        `https://coda.io/apis/v1/docs/${docId}/tables/${gridId}/rows`,
+    const results = [];
+    let nextPageToken = undefined;
+    do {
+      const resp = await fetch(
+        withQueryParams(
+          `https://coda.io/apis/v1/docs/${docId}/tables/${gridId}/rows`,
+          {
+            useColumnNames: true,
+            valueFormat: "simpleWithArrays",
+            sortBy: "natural",
+            ...params,
+          }
+        ),
         {
-          useColumnNames: true,
-          valueFormat: "simpleWithArrays",
-          sortBy: "natural",
-          ...params,
+          headers: {
+            Authorization: `Bearer ${CodaApiToken}`,
+          },
         }
-      ),
-      {
-        headers: {
-          Authorization: `Bearer ${CodaApiToken}`,
-        },
-      }
-    );
-    const respBody = await resp.json();
-    const dataMetadata = respBody.items;
-    const data = dataMetadata.map((d) => d.values);
-    const apiResponse = new Response(JSON.stringify(data), {
+      );
+      const respBody = await resp.json();
+      const dataMetadata = respBody.items;
+      nextPageToken = respBody.nextPageToken;
+      const data = dataMetadata.map((d) => d.values);
+      results.push(...data);
+    } while (nextPageToken);
+
+    const apiResponse = new Response(JSON.stringify(results), {
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": `s-maxage=30`,
