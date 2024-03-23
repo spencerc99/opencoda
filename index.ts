@@ -26,12 +26,6 @@ const handler: ExportedHandler = {
     const CodaApiToken = env.CODA_API_TOKEN;
     const url = new URL(request.url);
 
-    if (url.pathname === "/") {
-      return error(
-        "Please provide a doc ID and grid ID in the url path. See https://github.com/spencerc99/opencoda#readme for more info."
-      );
-    }
-
     let [docId, gridId] = url.pathname
       .slice(1)
       .split("/")
@@ -39,7 +33,13 @@ const handler: ExportedHandler = {
 
     const params = url.search ? deriveParamsFromSearch(url.search) : {};
 
-    if (gridId.indexOf("grid-") === -1) {
+    if (url.pathname === "/" || !docId) {
+      return error(
+        "Please provide a doc ID and grid ID in the url path. See https://github.com/spencerc99/opencoda#readme for more info."
+      );
+    }
+
+    if (gridId?.indexOf("grid-") === -1) {
       return error("Invalid grid ID. Should be in the format of 'grid-123abc'");
     }
 
@@ -63,6 +63,11 @@ const handler: ExportedHandler = {
         }
       );
       const respBody = await resp.json();
+      if (!respBody?.items) {
+        return error(
+          `Error with fetching: ${JSON.stringify(respBody, null, 2)}`
+        );
+      }
       const dataMetadata = respBody.items;
       nextPageToken = respBody.nextPageToken;
       const data = dataMetadata.map((d) => d.values);
