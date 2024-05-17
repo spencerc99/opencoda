@@ -13,6 +13,10 @@ Make sure that the doc is publicly accessible for viewing purposes. Note that if
 ![](copy-grid-id.png)
 _how to get the table ID from a table in Coda_
 
+### Forms
+
+Using a `POST` to "https://opencoda.spencerc99.workers.dev/<FORM_ID>" with the fields filled out as parameters allows you to submit to a form programmatically. Note that this doesn't work with complex columns like Images or Files which use the form interface to upload first.
+
 ### Advanced Use
 
 By default, data will be returned from the Coda API using the following parameters:
