@@ -11,12 +11,13 @@
   },
   "author": "Spencer Chang <spencerc99@gmail.com>",
   "license": "ISC",
-  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^20.3.1",
     "@cloudflare/workers-types": "^4.20230419.0",
+    "@types/node": "^20.3.1",
     "itty-router": "^3.0.12",
-    "typescript": "^5.0.4",
-    "wrangler": "^3.0.0"
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "wrangler": "^3.56.0"
   }
 }

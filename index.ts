@@ -95,12 +95,16 @@ const handler: ExportedHandler = {
         .slice(1)
         .split("/")
         .filter((x) => x);
-
-      const params = url.search ? deriveParamsFromSearch(url.search) : {};
+      const body = await request.json();
 
       if (url.pathname === "/" || !docId) {
         return error(
           "Please provide a doc ID corresponding to a form. See https://github.com/spencerc99/opencoda#readme for more info."
+        );
+      }
+      if (!body) {
+        return error(
+          "Please provide your form fields in the request body. See https://github.com/spencerc99/opencoda#readme for more info."
         );
       }
       const resp = await fetch(`https://coda.io/form/${docId}/submit`, {
@@ -108,7 +112,7 @@ const handler: ExportedHandler = {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ row: params }),
+        body: JSON.stringify({ row: body }),
       });
 
       if (!resp.ok) {
