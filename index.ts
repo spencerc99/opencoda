@@ -48,9 +48,9 @@ const handler: ExportedHandler = {
         );
       }
 
-      if (gridId?.indexOf("grid-") === -1) {
+      if (gridId?.indexOf("grid-") === -1 && gridId?.indexOf("table-") === -1) {
         return error(
-          "Invalid grid ID. Should be in the format of 'grid-123abc'"
+          "Invalid grid ID. Should be in the format of 'grid-123abc' or 'table-123abc'"
         );
       }
 
@@ -96,6 +96,7 @@ const handler: ExportedHandler = {
         .split("/")
         .filter((x) => x);
       const body = await request.json();
+      console.log(body);
 
       if (url.pathname === "/" || !docId) {
         return error(
@@ -107,17 +108,14 @@ const handler: ExportedHandler = {
           "Please provide your form fields in the request body. See https://github.com/spencerc99/opencoda#readme for more info."
         );
       }
-      const resp = await fetch(`https://coda.io/form/${docId}/submit`, {
+
+      await fetch(`https://coda.io/form/${docId}/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ row: body }),
       });
-
-      if (!resp.ok) {
-        return error(`Response ${resp.status}: ${resp.statusText}`);
-      }
 
       return new Response("ok", {
         headers: responseHeaders,
